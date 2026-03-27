@@ -1,3 +1,623 @@
-# 19AI307_ODD(25-26)
+# Ex.No:3(A) INHERITANCE AND AGGREGATION
 
-ODD_2025-26
+## QUESTION:
+A jewelry store tracks gold rates for different types of customers. The base class is Customer with attributes like customerId, name, and purchaseWeight (in grams). There are two types of customers: RegularCustomer and PremiumCustomer. RegularCustomer gets a fixed discount of 2% on the gold rate per gram. PremiumCustomer gets a 5% discount plus a special cashback. The base gold rate per gram is input at runtime. For each customer, calculate the final price they pay:
+
+finalPrice = purchaseWeight * (goldRatePerGram - discount)
+
+For PremiumCustomer, additionally show cashback amount (which is 1% of the final price).
+
+## AIM:
+To write a Java program using inheritance to calculate the final gold price for different types of customers (Regular and Premium) based on discounts and cashback.
+
+## ALGORITHM :
+1.	Define a base class Customer with attributes customerId, name, and purchaseWeight.
+2.	Define RegularCustomer subclass with a 2% discount on the gold rate.
+3.	Define PremiumCustomer subclass with a 5% discount and 1% cashback on the final price.
+4.	Input the base gold rate per gram at runtime.
+5.	For each customer, calculate and display the final price (and cashback for premium).
+
+
+
+
+## PROGRAM:
+
+```
+import java.util.Scanner;
+import java.text.DecimalFormat;
+
+class Customer {
+    String customerId, name;
+    double purchaseWeight, goldRatePerGram;
+
+    Customer(String customerId, String name, double purchaseWeight, double goldRatePerGram) {
+        this.customerId = customerId;
+        this.name = name;
+        this.purchaseWeight = purchaseWeight;
+        this.goldRatePerGram = goldRatePerGram;
+    }
+
+    double getDiscountRate() {
+        return 0; // Default: no discount
+    }
+
+    double calculateFinalPrice() {
+        double discountAmount = goldRatePerGram * getDiscountRate() / 100;
+        double effectiveRate = goldRatePerGram - discountAmount;
+        return purchaseWeight * effectiveRate;
+    }
+
+    void display() {
+        DecimalFormat df = new DecimalFormat("0.00");
+        System.out.println("Customer ID: " + customerId);
+        System.out.println("Name: " + name);
+        System.out.println("Customer Type: General");
+        System.out.println("Purchase Weight: " + purchaseWeight + " grams");
+        System.out.println("Gold Rate per Gram: " + goldRatePerGram);
+        System.out.println("Discount: " + (int)getDiscountRate() + "%");
+        System.out.println("Final Price: " + df.format(calculateFinalPrice()));
+    }
+}
+
+class RegularCustomer extends Customer {
+    RegularCustomer(String customerId, String name, double purchaseWeight, double goldRatePerGram) {
+        super(customerId, name, purchaseWeight, goldRatePerGram);
+    }
+
+    @Override
+    double getDiscountRate() {
+        return 2.0;
+    }
+
+    @Override
+    void display() {
+        DecimalFormat df = new DecimalFormat("0.00");
+        System.out.println("Customer ID: " + customerId);
+        System.out.println("Name: " + name);
+        System.out.println("Customer Type: Regular");
+        System.out.println("Purchase Weight: " + purchaseWeight + " grams");
+        System.out.println("Gold Rate per Gram: " + goldRatePerGram);
+        System.out.println("Discount: " + (int)getDiscountRate() + "%");
+        System.out.println("Final Price: " + df.format(calculateFinalPrice()));
+    }
+}
+
+class PremiumCustomer extends Customer {
+    PremiumCustomer(String customerId, String name, double purchaseWeight, double goldRatePerGram) {
+        super(customerId, name, purchaseWeight, goldRatePerGram);
+    }
+
+    @Override
+    double getDiscountRate() {
+        return 5.0;
+    }
+
+    double getCashback() {
+        return calculateFinalPrice() * 0.01;
+    }
+
+    @Override
+    void display() {
+        DecimalFormat df = new DecimalFormat("0.00");
+        System.out.println("Customer ID: " + customerId);
+        System.out.println("Name: " + name);
+        System.out.println("Customer Type: Premium");
+        System.out.println("Purchase Weight: " + purchaseWeight + " grams");
+        System.out.println("Gold Rate per Gram: " + goldRatePerGram);
+        System.out.println("Discount: " + (int)getDiscountRate() + "%");
+        System.out.println("Final Price: " + df.format(calculateFinalPrice()));
+        System.out.println("Cashback: " + df.format(getCashback()));
+    }
+}
+
+public class prog {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        while (sc.hasNext()) {
+            String type = sc.next();
+            String customerId = sc.next();
+            String name = sc.next();
+            double weight = sc.nextDouble();
+            double goldRate = sc.nextDouble();
+
+            Customer c;
+            if (type.equalsIgnoreCase("Regular")) {
+                c = new RegularCustomer(customerId, name, weight, goldRate);
+            } else if (type.equalsIgnoreCase("Premium")) {
+                c = new PremiumCustomer(customerId, name, weight, goldRate);
+            } else {
+                c = new Customer(customerId, name, weight, goldRate);
+            }
+
+            c.display();
+            System.out.println();
+        }
+
+        sc.close();
+    }
+}
+```
+
+
+
+
+
+
+
+## OUTPUT:
+
+<img width="1290" height="746" alt="image" src="https://github.com/user-attachments/assets/2fcd81a5-afd5-4ad9-a198-f89dcabc4db5" />
+
+
+## RESULT:
+The program successfully calculates and displays the final payable price for both Regular and Premium customers with applicable discounts and cashback.
+
+# Ex.No:3(b) POLYMORPHISM
+
+## QUESTION:
+Write a Java program demonstrating method overriding. Create a class Animal with a method sound(). Subclass it as Dog, Cat, Cow, each overriding the sound() method.
+
+## AIM:
+To write a Java program that demonstrates method overriding using inheritance and polymorphism.
+
+## ALGORITHM :
+1.	Create a base class Animal with a method sound().
+2.	Create subclasses Dog, Cat, and Cow that extend Animal.
+3.	Override the sound() method in each subclass to print specific sounds.
+4.	In main(), use an Animal reference to point to each subclass object.
+5.	Call the sound() method to demonstrate runtime polymorphism.
+
+
+## PROGRAM:
+
+```
+import java.util.Scanner;
+
+class Animal {
+    void sound() {
+        System.out.println("Unknown animal");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+class Cat extends Animal {
+    @Override
+    void sound() {
+        System.out.println("Cat meows");
+    }
+}
+
+class Cow extends Animal {
+    @Override
+    void sound() {
+        System.out.println("Cow moos");
+    }
+}
+
+public class prog {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextLine()) {
+            String input = sc.nextLine().trim();
+            if (input.isEmpty()) continue;
+
+            Animal a;
+            switch(input.toLowerCase()) {
+                case "dog": a = new Dog(); break;
+                case "cat": a = new Cat(); break;
+                case "cow": a = new Cow(); break;
+                default: a = new Animal();
+            }
+            a.sound();
+        }
+        sc.close();
+    }
+}
+```
+
+## OUTPUT:
+<img width="1215" height="500" alt="image" src="https://github.com/user-attachments/assets/d08ba277-f28b-4af5-9ac8-8a8c71761ca5" />
+
+## RESULT:
+The program successfully demonstrates method overriding, showing different behaviors of the sound() method for different animal subclasses.
+
+
+# Ex.No:3(C) ABSTRACTION
+
+## QUESTION:
+Description:
+Create abstract class GameScore with method finalScore().
+Subclasses:
+
+ArcadeGame: score = baseScore + (level × 100)
+
+PuzzleGame: score = (attempts ≤ 3) ? 1000 - (attempts × 100) : 500
+
+Input Format:
+
+First line: 1 or 2
+Second line: base, level (or attempts)
+
+Output Format:
+
+Final score (int)
+
+
+
+## AIM:
+To write a Java program using an abstract class GameScore with subclasses ArcadeGame and PuzzleGame, each implementing its own finalScore() method.
+
+## ALGORITHM :
+1.	Create an abstract class GameScore with an abstract method finalScore().
+2.	Define subclass ArcadeGame where finalScore = baseScore + (level × 100).
+3.	Define subclass PuzzleGame where
+4.	If attempts ≤ 3, score = 1000 - (attempts × 100)
+5.	Else score = 500.
+6.	Take user input for game type and relevant values.
+7.	Display the final score based on game type.
+
+
+
+## PROGRAM:
+
+```
+import java.util.*;
+
+abstract class GameScore {
+    abstract int finalScore();
+}
+
+class ArcadeGame extends GameScore {
+    int base, level;
+    ArcadeGame(int base, int level) {
+        this.base = base;
+        this.level = level;
+    }
+    int finalScore() {
+        return base + (level * 100);
+    }
+}
+
+class PuzzleGame extends GameScore {
+    int attempts;
+    PuzzleGame(int attempts) {
+        this.attempts = attempts;
+    }
+    int finalScore() {
+        if (attempts <= 3)
+            return 1000 - (attempts * 100);
+        else
+            return 500;
+    }
+}
+
+public class prog {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int type = sc.nextInt();
+        if (type == 1) {
+            int base = sc.nextInt();
+            int level = sc.nextInt();
+            ArcadeGame game = new ArcadeGame(base, level);
+            System.out.println(game.finalScore());
+        } else if (type == 2) {
+            int attempts = sc.nextInt();
+            PuzzleGame game = new PuzzleGame(attempts);
+            System.out.println(game.finalScore());
+        }
+    }
+}
+```
+
+## OUTPUT:
+<img width="1147" height="386" alt="image" src="https://github.com/user-attachments/assets/4447ae81-3e1b-46a2-91a4-e2ad7316e6a6" />
+
+## RESULT:
+The program successfully demonstrates abstraction and inheritance by computing the final score for different game types using subclass-specific logic.
+
+
+# Ex.No:3(D)    INTERFACE 
+
+## QUESTION:
+You are programming bots that analyze weather data. Each bot must implement a common interface and give a prediction.
+
+
+ Bot Types:
+
+SunBot: Predicts "HOT" if temperature > 30, else "MODERATE".
+
+RainBot: Predicts "COLD" if temperature < 20, else "WARM".
+
+Input:
+
+temperature
+botType (1 for SunBot, 2 for RainBot)Output:
+Prediction as a string.
+
+## AIM:
+To implement weather prediction using interfaces with two bots — SunBot and RainBot.
+
+## ALGORITHM :
+1.	Create WeatherBot interface with predict() method.
+2.	Implement SunBot and RainBot classes with different prediction logic.
+3.	Take temperature and botType as input.
+4.	Use the chosen bot to call predict().
+5.	Display the prediction.
+
+## PROGRAM:
+
+```
+import java.util.Scanner;
+
+interface WeatherBot {
+    String predict(int temperature);
+}
+
+class SunBot implements WeatherBot {
+    public String predict(int temperature) {
+        if (temperature > 30) {
+            return "HOT";
+        } else {
+            return "MODERATE";
+        }
+    }
+}
+
+class RainBot implements WeatherBot {
+    public String predict(int temperature) {
+        if (temperature < 20) {
+            return "COLD";
+        } else {
+            return "WARM";
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int temperature = sc.nextInt();
+        int botType = sc.nextInt();
+        WeatherBot bot;
+
+        if (botType == 1) {
+            bot = new SunBot();
+        } else {
+            bot = new RainBot();
+        }
+
+        System.out.println(bot.predict(temperature));
+        sc.close();
+    }
+}
+```
+
+## OUTPUT:
+<img width="1148" height="334" alt="image" src="https://github.com/user-attachments/assets/b635390f-88b0-47d2-893e-ab671a5dac52" />
+
+
+## RESULT:
+The program predicts weather conditions using interface implementation and method overriding.
+
+
+# Ex.No:3(E) INNER CLASS
+
+## QUESTION:
+Write a Java program to create an inner class and access it from the outer class.
+
+## AIM:
+To demonstrate accessing an inner class from an outer class in Java.
+
+## ALGORITHM :
+1.	Create an outer class with a private variable.
+2.	Define an inner class inside it with a method to access the outer variable.
+3.	In main(), create an object of the outer class.
+4.	Use it to create an object of the inner class.
+5.	Call the inner class method.
+
+## PROGRAM:
+
+```
+import java.util.Scanner;
+
+class OuterClass {
+    String name;
+
+    OuterClass(String name) {
+        this.name = name;
+    }
+
+    void display() {
+        InnerClass inner = new InnerClass();
+        inner.showMessage();
+    }
+
+    class InnerClass {
+        void showMessage() {
+            System.out.println("Hello, " + name + "! This message is from the Inner Class.");
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("");
+        String input = scanner.next();
+        scanner.close();
+
+        OuterClass outer = new OuterClass(input);
+        outer.display();
+    }
+}
+```
+
+## OUTPUT:
+<img width="1223" height="347" alt="image" src="https://github.com/user-attachments/assets/3a4a3b07-7cc7-4e68-877e-4bb04d3aab6d" />
+
+## RESULT:
+The program successfully accesses and prints data from the inner class using the outer class.
+
+
+# Ex.No:3(F) WRAPPER CLASS
+
+## QUESTION:
+Write a Java program to convert a string to an integer using a wrapper class and perform addition.
+
+## AIM:
+To convert string inputs into integers using the wrapper class and perform addition.
+
+## ALGORITHM :
+1.	Read two numbers as strings.
+2.	Convert them to integers using Integer.parseInt().
+3.	Add the two integers.
+4.	Display the sum.
+
+## PROGRAM:
+```
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        String str1 = scanner.next();
+
+        String str2 = scanner.next();
+
+        scanner.close();
+
+        try {
+            int num1 = Integer.parseInt(str1);
+            int num2 = Integer.parseInt(str2);
+
+
+            int sum = num1 + num2;
+            System.out.println("Sum = " + sum);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid number.");
+        }
+    }
+}
+```
+## OUTPUT:
+<img width="1223" height="414" alt="image" src="https://github.com/user-attachments/assets/899591cc-4837-4c4d-9693-94fdcade6361" />
+
+## RESULT:
+The program successfully converts strings to integers and displays their sum.
+
+
+# Ex.No:3(F) WRAPPER CLASS
+
+## QUESTION:
+Write a Java program to convert a string to an integer using a wrapper class and perform addition.
+
+## AIM:
+To convert string inputs into integers using the wrapper class and perform addition.
+
+## ALGORITHM :
+1.	Read two numbers as strings.
+2.	Convert them to integers using Integer.parseInt().
+3.	Add the two integers.
+4.	Display the sum.
+
+## PROGRAM:
+
+```
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        String str1 = scanner.next();
+
+        String str2 = scanner.next();
+
+        scanner.close();
+
+        try {
+            int num1 = Integer.parseInt(str1);
+            int num2 = Integer.parseInt(str2);
+
+
+            int sum = num1 + num2;
+            System.out.println("Sum = " + sum);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid number.");
+        }
+    }
+}
+```
+## OUTPUT:
+<img width="1223" height="414" alt="image" src="https://github.com/user-attachments/assets/899591cc-4837-4c4d-9693-94fdcade6361" />
+
+## RESULT:
+The program successfully converts strings to integers and displays their sum.
+
+
+# Ex.No:4(A) EXCEPTION HANDLING
+
+## QUESTION:
+You wrote a program that stores some input strings into a String array and prints each string in uppercase.
+However, you're getting a NullPointerException.
+What should you check in your array before calling .toUpperCase() on a element?
+
+## AIM:
+To handle a NullPointerException when performing operations on a null string in Java.
+
+## ALGORITHM :
+1.	Read a string input from the user.
+2.	If the input is "null", assign null to the variable.
+3.	Try converting the string to uppercase using toUpperCase().
+4.	Catch and handle the NullPointerException if the string is null.
+5.	Print "Null element" in case of exception.
+
+## PROGRAM:
+ ```
+/*
+Program to implement a InnerClass using Java
+Developed by: PRASANNA R
+RegisterNumber: 212222040120
+*/
+```
+
+## SOURCE CODE:
+```
+import java.util.Scanner;
+
+public class NullPointerArrayExample {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        String input = sc.next();
+        String str = input.equalsIgnoreCase("null") ? null : input;
+
+        try {
+            System.out.println(str.toUpperCase());
+        } catch (NullPointerException e) {
+            System.out.println("Null element");
+        }
+
+        sc.close();
+    }
+}
+```
+
+## OUTPUT:
+<img width="1266" height="354" alt="image" src="https://github.com/user-attachments/assets/ca3d287f-7bcc-4852-9515-a3ff25df30a1" />
+
+## RESULT:
+The program successfully detects and handles NullPointerException by displaying "Null element" when the input is null.
+
+
+
+
+
